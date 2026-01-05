@@ -1,0 +1,54 @@
+<!-- backend/templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>داشبورد استاد — Exam System</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>داشبورد استاد</h1>
+
+      <h2>افزودن آزمون جدید</h2>
+      <form action="/dashboard/exam/add" method="post">
+        <div style="margin-bottom:8px"><input name="title" placeholder="عنوان آزمون" required></div>
+        <div style="margin-bottom:8px"><input name="description" placeholder="توضیحات (اختیاری)"></div>
+        <button class="btn" type="submit">افزودن</button>
+      </form>
+
+      <h2 style="margin-top:18px">آزمون‌ها</h2>
+      <table class="table">
+        <tr>
+          <th>عنوان</th>
+          <th>مدیریت</th>
+          <th>نتایج</th>
+          <th>حذف</th>
+        </tr>
+        {% for e in exams %}
+          <tr>
+            <td style="text-align:right">{{ e.title }}</td>
+            <td>
+              <a class="btn" href="/dashboard/exam/{{ e.id }}/questions">مدیریت سوالات</a>
+            </td>
+            <td>
+              <a class="btn" href="/dashboard/results/{{ e.id }}">مشاهده نتایج</a>
+            </td>
+            <td>
+              <form action="/dashboard/exam/delete" method="post" style="display:inline">
+                <input type="hidden" name="exam_id" value="{{ e.id }}">
+                <button class="btn" type="submit" onclick="return confirm('آیا حذف شود؟')">حذف</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+
+      <div style="margin-top:12px">
+        <a class="btn" href="/teacher/logout">خروج</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>ورود به آزمون — Exam System</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>ورود به آزمون</h1>
+
+      {% if message %}
+        <p style="color:red">{{ message }}</p>
+      {% endif %}
+
+      <!-- فرم ورود به آزمون -->
+      <form action="/start" method="post">
+        <div style="margin-bottom:10px">
+          <label>نام</label>
+          <input type="text" name="student_name" placeholder="(با حروف فارسی)نام خود را وارد کنید" required>
+        </div>
+
+        <div style="margin-bottom:10px">
+          <label>شماره تلفن</label>
+          <input type="text" name="phone" placeholder="(با ارقام فارسی)شماره تلفن خود را وارد کنید" required>
+        </div>
+
+        <div style="margin-bottom:10px">
+          <label>استان</label>
+          <select name="province" required>
+            <option value="">انتخاب استان</option>
+            {% for p in provinces %}
+              <option value="{{ p }}">{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div style="margin-bottom:10px">
+          <label>آزمون</label>
+          <select name="exam_id" id="exam_select" required>
+            <option value="">انتخاب آزمون</option>
+            {% for e in exams %}
+              <option value="{{ e.id }}">{{ e.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button class="btn" type="submit">ورود به آزمون</button>
+      </form>
+
+      <div style="margin-top:12px; display:flex; gap:5px;">
+        <a class="btn" href="/teacher">ورود استاد</a>
+        <button class="btn" onclick="viewResult()" type="button">مشاهده نتیجه</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function viewResult() {
+      const examSelect = document.getElementById("exam_select");
+      const examId = examSelect.value;
+      if (!examId) {
+        alert("لطفاً ابتدا آزمون را انتخاب کنید.");
+        return;
+      }
+      window.location.href = `/student/result/${examId}`;
+    }
+  </script>
+</body>
+</html>

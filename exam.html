@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>آزمون — Exam System</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="exam-card">
+      <h2>آزمون  </h2>
+      <div class="timer">زمان باقی‌مانده: <span id="exam-timer">—</span></div>
+
+      <form id="examForm" method="post" action="/submit">
+        <input type="hidden" name="exam_id" value="{{ exam_id }}">
+        <input type="hidden" name="student_name" value="{{ student_name }}">
+        <input type="hidden" name="province" value="{{ province }}">
+        <input type="hidden" id="answers_json" name="answers_json">
+
+        {% for q in questions %}
+        <div class="question" data-qname="{{ q.id }}">
+          <p><strong>{{ loop.index }}.</strong> {{ q.text }}</p>
+          <label class="answer"><input type="radio" name="{{ q.id }}" value="A"> A) {{ q.option_a }}</label>
+          <label class="answer"><input type="radio" name="{{ q.id }}" value="B"> B) {{ q.option_b }}</label>
+          <label class="answer"><input type="radio" name="{{ q.id }}" value="C"> C) {{ q.option_c }}</label>
+          <label class="answer"><input type="radio" name="{{ q.id }}" value="D"> D) {{ q.option_d }}</label>
+        </div>
+        {% endfor %}
+
+        <div class="center" style="margin-top:12px">
+          <button type="button" class="btn" onclick="prepareAndSubmit()">ثبت و مشاهده کارنامه</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // جمع‌آوری پاسخ‌ها و ارسال فرم
+    function prepareAndSubmit(){
+      const answers = {};
+      document.querySelectorAll('.question').forEach(q=>{
+        const qid = q.getAttribute('data-qname');
+        const sel = q.querySelector('input[type=radio]:checked');
+        answers[qid] = sel ? sel.value : "";
+      });
+      document.getElementById('answers_json').value = JSON.stringify(answers);
+
+      // حذف تایمر از localStorage بعد از ثبت
+      const key = "exam_timer_{{ exam_id }}_{{ student_name|replace(' ', '_') }}";
+      localStorage.removeItem(key);
+
+      document.getElementById('examForm').submit();
+    }
+
+    // --- تایمر آزمون ---
+    (function(){
+      const duration = {{ duration if duration is defined else 60 }};
+      const key = "exam_timer_{{ exam_id }}_{{ student_name|replace(' ', '_') }}";
+      let endTime = localStorage.getItem(key);
+      if(!endTime){
+        endTime = Date.now() + duration*1000;
+        localStorage.setItem(key, endTime);
+      } else {
+        endTime = parseInt(endTime);
+      }
+
+      function updateTimer(){
+        const now = Date.now();
+        let remaining = Math.floor((endTime - now)/1000);
+        if(remaining <= 0){
+          remaining = 0;
+          localStorage.removeItem(key);
+          document.getElementById("examForm").submit(); // زمان تموم شد، ارسال فرم
+        }
+        const min = Math.floor(remaining/60);
+        const sec = remaining % 60;
+        document.getElementById("exam-timer").textContent = `${min}:${sec.toString().padStart(2,'0')}`;
+        if(remaining > 0) requestAnimationFrame(updateTimer);
+      }
+      updateTimer();
+    })();
+  </script>
+</body>
+</html>

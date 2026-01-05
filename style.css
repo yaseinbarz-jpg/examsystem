@@ -1,0 +1,55 @@
+/* backend/static/css/style.css - رسمی و مدرن، تست‌شده در کروم/فایرفاکس */
+:root{
+  --primary:#2563eb;
+  --primary-dark:#1e40af;
+  --muted:#6b7280;
+  --bg:#f3f6fb;
+}
+
+*{box-sizing:border-box}
+body{
+  font-family: Vazirmatn, Tahoma, sans-serif;
+  background:var(--bg);
+  margin:0;
+  color:#111827;
+  direction:rtl;
+}
+.container{
+  max-width:960px;
+  margin:28px auto;
+  padding:18px;
+}
+.card, .exam-card, .result-card{
+  background:#fff;
+  border-radius:12px;
+  padding:18px;
+  box-shadow:0 6px 20px rgba(15,23,42,0.06);
+}
+h1,h2{color:var(--primary)}
+.btn{
+  display:inline-block;
+  background:var(--primary);
+  color:#fff;
+  padding:8px 14px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  text-decoration:none;
+}
+.btn:hover{background:var(--primary-dark)}
+input,select,textarea{
+  padding:10px;border-radius:8px;border:1px solid #e6eef9;width:100%;
+}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:10px;border-bottom:1px solid #f1f5f9;text-align:center}
+.question{background:#fbfdff;border:1px solid #eef4ff;padding:12px;border-radius:8px;margin-bottom:12px;text-align:right}
+label.answer{display:block;margin:6px 0;cursor:pointer}
+.center{display:flex;align-items:center;justify-content:center}
+.correct{color:green;font-weight:bold}
+.wrong{color:red;font-weight:bold}
+small.muted{color:var(--muted)}
+.timer{font-weight:bold;color:var(--primary);margin-bottom:12px;text-align:center}
+@media (max-width:600px){
+  .container{padding:10px;margin:12px}
+  .card, .exam-card, .result-card{padding:12px}
+}

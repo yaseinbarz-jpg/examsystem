@@ -1,0 +1,59 @@
+<!-- backend/templates/result.html -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>کارنامه — Exam System</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="result-card">
+      {% if result %}
+        <h2>📋 کارنامه — {{ result.student_name }}</h2>
+        <p>استان: {{ result.province }} | درصد: <b>{{ result.score }}%</b> | تراز: {{ result.tazr }}</p>
+
+        {% if details.per_question %}
+          <h3>جزئیات پاسخ‌ها</h3>
+          {% for qid, item in details.per_question.items() %}
+            <div class="question">
+              <p><strong>سؤال {{ loop.index }}:</strong> {{ item.text }}</p>
+              <p>پاسخ شما: 
+                <span class="{{ 'correct' if item.is_correct else 'wrong' }}">
+                  {{ item.your_answer or '—' }}
+                </span>
+              </p>
+              <p>پاسخ صحیح: <span class="correct">{{ item.correct }}</span></p>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>جزئیات پاسخ‌ها در دسترس نیست.</p>
+        {% endif %}
+
+        <h3>درصد هر مبحث</h3>
+        {% if details.per_topic %}
+          <table class="table">
+            <tr><th>مبحث</th><th>درصد</th></tr>
+            {% for topic, pct in details.per_topic.items() %}
+              <tr><td>{{ topic }}</td><td>{{ pct }}%</td></tr>
+            {% endfor %}
+          </table>
+        {% else %}
+          <p>جزئیات مباحث موجود نیست.</p>
+        {% endif %}
+
+        <div style="margin-top:16px">
+          {% if request.cookies.get('teacher_auth') == '1' %}
+            <a class="btn" href="/dashboard/results/{{ result.exam_id }}">مشاهده نتایج کامل آزمون</a>
+          {% else %}
+            <a class="btn" href="/">بازگشت به صفحه اصلی</a>
+          {% endif %}
+        </div>
+      {% else %}
+        <h2>نتیجه‌ای یافت نشد</h2>
+        <a class="btn" href="/">بازگشت</a>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

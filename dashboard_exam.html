@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>مدیریت سوالات — Exam System</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>مدیریت سوالات — {{ exam.title if exam else '' }}</h1>
+
+      <h2>افزودن سوال</h2>
+      <form action="/dashboard/exam/{{ exam.id }}/questions/add" method="post">
+        <input type="hidden" name="exam_id" value="{{ exam.id }}">
+        <div style="margin-bottom:8px"><input name="text" placeholder="متن سؤال" required></div>
+        <div style="margin-bottom:8px"><input name="option_a" placeholder="گزینه A"></div>
+        <div style="margin-bottom:8px"><input name="option_b" placeholder="گزینه B"></div>
+        <div style="margin-bottom:8px"><input name="option_c" placeholder="گزینه C"></div>
+        <div style="margin-bottom:8px"><input name="option_d" placeholder="گزینه D"></div>
+        <div style="margin-bottom:8px"><input name="correct" placeholder="گزینه صحیح (A/B/C/D)"></div>
+        <div style="margin-bottom:8px">
+          <label>مبحث</label>
+          <input name="topic" placeholder="مثلاً مدنی">
+        </div>
+        <button class="btn" type="submit">افزودن سوال</button>
+      </form>
+
+      <h2 style="margin-top:16px;">سوالات</h2>
+      <table class="table">
+        <tr><th>ردیف</th><th>متن</th><th>مبحث</th><th>حذف</th></tr>
+        {% for q in questions %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td style="text-align:right">{{ q.text }}</td>
+          <td>{{ q.topic }}</td>
+          <td>
+            <form action="/dashboard/question/delete" method="post" style="display:inline">
+              <input type="hidden" name="exam_id" value="{{ exam.id }}">
+              <input type="hidden" name="question_id" value="{{ q.id }}">
+              <button class="btn" type="submit" onclick="return confirm('آیا حذف شود؟')">حذف</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <div style="margin-top:12px"><a class="btn" href="/dashboard">بازگشت</a></div>
+    </div>
+  </div>
+</body>
+</html>

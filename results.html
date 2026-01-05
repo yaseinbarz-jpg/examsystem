@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>لیست نتایج — Exam System</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>نتایج آزمون </h1>
+
+      <!-- 🔍 نوار جستجوی نام -->
+      <div style="margin: 10px 0;">
+        <input id="searchName" type="text" placeholder="جستجوی نام..." 
+               style="width: 100%; padding: 8px; font-size: 16px;">
+      </div>
+
+      <form method="get">
+        <label>فیلتر استان</label>
+        <select name="province" onchange="this.form.submit()">
+          <option value="">همه استان‌ها</option>
+          {% for p in provinces %}
+            <option value="{{ p }}" {% if selected_province==p %}selected{% endif %}>{{ p }}</option>
+          {% endfor %}
+        </select>
+      </form>
+
+      <table class="table" id="resultsTable">
+        <tr>
+          <th>نام و شماره تلفن</th>
+          <th>استان</th>
+          <th>درصد</th>
+          <th>تراز</th>
+          <th>رتبه کشوری</th>
+          <th>رتبه استانی</th>
+          <th>مشاهده</th>
+        </tr>
+        {% for r in results %}
+          <tr>
+            <td>{{ r.student_name }}</td>
+            <td>{{ r.province }}</td>
+            <td>{{ r.score }}%</td>
+            <td>{{ r.tazr }}</td>
+            <td>{{ r.rank_national }}</td>
+            <td>{{ r.rank_provincial }}</td>
+            <td><a class="btn" href="/result/{{ r.id }}">مشاهده</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+
+      <div style="margin-top:12px"><a class="btn" href="/dashboard">بازگشت</a></div>
+    </div>
+  </div>
+
+  <!-- 🔍 اسکریپت جستجو -->
+  <script>
+    const searchInput = document.getElementById("searchName");
+    const table = document.getElementById("resultsTable");
+
+    searchInput.addEventListener("keyup", function(){
+      const filter = this.value.trim();
+      const rows = table.getElementsByTagName("tr");
+
+      for (let i = 1; i < rows.length; i++) {
+        const td = rows[i].getElementsByTagName("td")[0];
+        if (td) {
+          const text = td.textContent || td.innerText;
+          rows[i].style.display = text.includes(filter) ? "" : "none";
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

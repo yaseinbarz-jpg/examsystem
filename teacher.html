@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>ورود استاد — Exam System</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>ورود استاد</h1>
+      {% if message %}
+        <p style="color:red;">{{ message }}</p>
+      {% endif %}
+      <form action="/teacher/login" method="post">
+        <div style="margin-bottom:10px">
+          <input name="username" placeholder="نام کاربری" required>
+        </div>
+        <div style="margin-bottom:10px">
+          <input type="password" name="password" placeholder="رمز عبور" required>
+        </div>
+        <button class="btn" type="submit">ورود</button>
+      </form>
+      <div style="margin-top:12px">
+        <a class="btn" href="/">بازگشت</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
